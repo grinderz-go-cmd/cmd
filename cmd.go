@@ -310,7 +310,7 @@ func (c *Cmd) StartWithStdin(in io.Reader) <-chan Status {
 // has completely started the command.
 //
 // All other return errors are from the low-level system function for process termination.
-func (c *Cmd) Stop() error {
+func (c *Cmd) Stop(sig syscall.Signal) error {
 	c.Lock()
 	defer c.Unlock()
 
@@ -342,7 +342,7 @@ func (c *Cmd) Stop() error {
 	// Signal the process group (-pid), not just the process, so that the process
 	// and all its children are signaled. Else, child procs can keep running and
 	// keep the stdout/stderr fd open and cause cmd.Wait to hang.
-	return terminateProcess(c.status.PID)
+	return terminateProcess(c.status.PID, sig)
 }
 
 // Status returns the Status of the command at any time. It is safe to call

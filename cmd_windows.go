@@ -10,7 +10,7 @@ import (
 // Stop is idempotent. An error should only be returned in the rare case that
 // Stop is called immediately after the command ends but before Start can
 // update its internal state.
-func terminateProcess(pid int) error {
+func terminateProcess(pid int, sig syscall.Signal) error {
 	p, err := os.FindProcess(pid)
 	if err != nil {
 		return err

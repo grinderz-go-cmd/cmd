@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-cmd/cmd"
+	"github.com/grinderz-go-cmd/cmd"
 	"github.com/go-test/deep"
 )
 
@@ -110,7 +110,7 @@ func TestCmdStop(t *testing.T) {
 	time.Sleep(1 * time.Second)
 
 	// Kill the process
-	err := p.Stop()
+	err := p.Stop(syscall.SIGTERM)
 	if err != nil {
 		t.Error(err)
 	}
@@ -154,7 +154,7 @@ func TestCmdStop(t *testing.T) {
 	}
 
 	// Stop should be idempotent
-	err = p.Stop()
+	err = p.Stop(syscall.SIGTERM)
 	if err != nil {
 		t.Error(err)
 	}
@@ -185,7 +185,7 @@ func TestCmdNotStarted(t *testing.T) {
 		t.Error(diffs)
 	}
 
-	err := p.Stop()
+	err := p.Stop(syscall.SIGTERM)
 	if err != cmd.ErrNotStarted {
 		t.Error(err)
 	}
@@ -251,7 +251,7 @@ func TestCmdOutput(t *testing.T) {
 	}
 
 	// Kill the process
-	if err := p.Stop(); err != nil {
+	if err := p.Stop(syscall.SIGTERM); err != nil {
 		t.Error(err)
 	}
 }
@@ -433,7 +433,7 @@ func TestCmdBothOutput(t *testing.T) {
 	}
 
 	// Kill the process
-	if err := p.Stop(); err != nil {
+	if err := p.Stop(syscall.SIGTERM); err != nil {
 		t.Error(err)
 	}
 }
@@ -518,7 +518,7 @@ func TestCmdCombinedOutputOnly(t *testing.T) {
 	}
 
 	// Kill the process
-	if err := p.Stop(); err != nil {
+	if err := p.Stop(syscall.SIGTERM); err != nil {
 		t.Error(err)
 	}
 }
@@ -633,7 +633,7 @@ func TestCmdBothCombinedStreamOutput(t *testing.T) {
 	}
 
 	// Kill the process
-	if err := p.Stop(); err != nil {
+	if err := p.Stop(syscall.SIGTERM); err != nil {
 		t.Error(err)
 	}
 }
@@ -745,7 +745,7 @@ func TestCmdOnlyStreamingOutput(t *testing.T) {
 	}
 
 	// Kill the process
-	if err := p.Stop(); err != nil {
+	if err := p.Stop(syscall.SIGTERM); err != nil {
 		t.Error(err)
 	}
 }
@@ -1394,7 +1394,7 @@ func TestOptionsBeforeExecButStopped(t *testing.T) {
 		t.Fatal("timeout waiting for BeforeExec func")
 	}
 
-	err := p.Stop()
+	err := p.Stop(syscall.SIGTERM)
 	if err != cmd.ErrNotStarted {
 		t.Errorf("got err %v, expected cmd.ErrNotStarted", err)
 	}
@@ -1414,7 +1414,7 @@ func TestOptionsBeforeExecButStopped(t *testing.T) {
 
 	// Double checking that 2nd Stop returns nil because Stop docs
 	// say "stopping an already stopped command returns nil".
-	err = p.Stop()
+	err = p.Stop(syscall.SIGTERM)
 	if err != nil {
 		t.Errorf("got err %v, expected nil", err)
 	}
